@@ -7,7 +7,7 @@ test("Ship is not sunk", () => {
 
 test("Ship length", () => {
 	const ship = new Ship(3);
-	expect(ship._length).toEqual(3);
+	expect(ship.length).toEqual(3);
 });
 
 test("Ship is sunk", () => {
@@ -16,4 +16,17 @@ test("Ship is sunk", () => {
 	ship.hit();
 	ship.hit();
 	expect(ship.isSunk()).toEqual(true);
+});
+
+test("Ship hit increments hits", () => {
+  const ship = new Ship(3);
+  ship.hit();
+  expect(ship.hits).toEqual(1);
+});
+
+test("Ship cannot be hit after sunk", () => {
+  const ship = new Ship(1);
+  ship.hit();
+  ship.hit();
+  expect(ship.hits).toEqual(1);
 });

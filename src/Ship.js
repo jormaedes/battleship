@@ -12,4 +12,12 @@ export class Ship {
 		if (this.isSunk()) return;
 		this._hit++;
 	}
+
+	get length() {
+		return this._length;
+	}
+
+	get hits() {
+		return this._hit;
+	}
 }
