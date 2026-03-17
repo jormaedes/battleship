@@ -9,4 +9,15 @@ export class Player {
 	attack(enemyBoard, [row, col]) {
 		enemyBoard.receiveAttack([row, col])
 	}
+
+	randomAttack(enemyBoard) {
+		while(1) {
+			let row = Math.floor(Math.random() * 9);
+			let col = Math.floor(Math.random() * 9);
+			if (enemyBoard.grid[row][col] !== 'miss' && enemyBoard.grid[row][col] !== 'hit') {
+				enemyBoard.receiveAttack([row, col]);
+				return ;
+			}
+		}
+	}
 }
