@@ -7,7 +7,7 @@ test("ships are not sunk", () => {
 	const ship2 = new Ship(2);
 	game.placeShip(ship1, [0, 0], "horizontal");
 	game.placeShip(ship2, [1, 0], "horizontal");
-	expect(game.isAllSunk()).toEqual(false);
+	expect(game.allSunk()).toEqual(false);
 });
 
 test("ships are sunk", () => {
@@ -22,7 +22,7 @@ test("ships are sunk", () => {
 	game.receiveAttack([1, 0]);
 	game.receiveAttack([2, 0]);
 	game.receiveAttack([3, 0]);
-	expect(game.isAllSunk()).toEqual(true);
+	expect(game.allSunk()).toEqual(true);
 });
 
 // Grid começa a null

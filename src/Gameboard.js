@@ -2,7 +2,6 @@ import { Ship } from "./Ship.js";
 
 export class Gameboard {
 	constructor() {
-		this._ships = [];
 		this._missedAttacks = [];
 		this._grid = Array.from({ length: 10 }, () => Array(10).fill(null));
 	}
@@ -55,12 +54,21 @@ export class Gameboard {
 		if (cell === 'hit' || cell === 'miss') return;
 
 		if (cell !== null) {
-			cell.ship.hit();
+			cell.hit();
 			this.grid[row][col] = 'hit';
 		} else {
 			this.grid[row][col] = 'miss';
 			this.missedAttacks.push([row, col]);
 		}
+	}
+
+	allSunk() {
+		for (let i = 0; i < 10; i++){
+			for (let j = 0; j < 10; j++) {
+				if (this._grid[i][j] !== 'hit' && this._grid[i][j] !== 'miss' && this._grid[i][j] !== null)
+				return false;
+			}
+		}		return (true);
 	}
 
 	get grid() {
