@@ -49,6 +49,20 @@ export class Gameboard {
 		return this.#placeShipVertical(ship, coord);
 	}
 
+	receiveAttack([row, col]) {
+		const cell = this.grid[row][col];
+
+		if (cell === 'hit' || cell === 'miss') return;
+
+		if (cell !== null) {
+			cell.ship.hit();
+			this.grid[row][col] = 'hit';
+		} else {
+			this.grid[row][col] = 'miss';
+			this.missedAttacks.push([row, col]);
+		}
+	}
+
 	get grid() {
 		return this._grid;
 	}
