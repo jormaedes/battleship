@@ -4,4 +4,8 @@ export class Ship {
 		this._hit = 0;
 		this._sunk = false;
 	}
+
+	isSunk() {
+		return this._sunk;
+	}
 }
