@@ -12,8 +12,8 @@ export class Player {
 
 	randomAttack(enemyBoard) {
 		while(1) {
-			let row = Math.floor(Math.random() * 9);
-			let col = Math.floor(Math.random() * 9);
+			let row = Math.floor(Math.random() * 10);
+			let col = Math.floor(Math.random() * 10);
 			if (enemyBoard.grid[row][col] !== 'miss' && enemyBoard.grid[row][col] !== 'hit') {
 				enemyBoard.receiveAttack([row, col]);
 				return ;
