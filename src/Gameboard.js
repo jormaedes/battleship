@@ -5,7 +5,7 @@ export class Gameboard {
 	}
 
 	#isSafeHorizontal(ship, coord) {
-		if (ship.length + coord[1] > 9) return false;
+		if (coord[1] + ship.length > 10) return false;
 		for (let col = coord[1]; col < (ship.length + coord[1]); col++) {
 			if (this._grid[coord[0]][col] !== null)
 				return false;
@@ -14,7 +14,7 @@ export class Gameboard {
 	}
 
 	#isSafeVertical(ship, coord) {
-		if (ship.length + coord[0] > 9) return false;
+		if (coord[0] + ship.length > 10) return false;
 		for (let row = coord[0]; row < (ship.length + coord[0]); row++) {
 			if (this._grid[row][coord[1]] !== null)
 				return false;
