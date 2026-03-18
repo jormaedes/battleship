@@ -1,4 +1,7 @@
+import './css/style.css';
 import { GameController } from './GameController.js';
 import { DOMController } from './DOMController.js';
-import "./css/style.css";
 
+const game = new GameController();
+const dom = new DOMController(game);
+dom.init();
