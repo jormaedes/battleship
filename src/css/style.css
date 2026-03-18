@@ -91,3 +91,19 @@ body {
 	letter-spacing: 0.15em;
 	margin-bottom: 2rem;
 }
+
+.setup-screen {
+	gap: 0;
+}
+
+.setup-card {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	width: 100%;
+	max-width: 360px;
+	background: var(--surface);
+	border: 1px solid var(--border);
+	padding: 2rem 2.5rem;
+	position: relative;
+}
