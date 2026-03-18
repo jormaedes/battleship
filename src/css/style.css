@@ -125,3 +125,30 @@ body {
 	color: var(--text-dim);
 	text-transform: uppercase;
 }
+
+.name-input {
+	background: var(--bg);
+	border: 1px solid var(--border);
+	color: var(--text);
+	font-family: var(--font-mono);
+	font-size: 1rem;
+	padding: 0.75rem 1rem;
+	outline: none;
+	transition: border-color 0.2s, box-shadow 0.2s;
+	letter-spacing: 0.05em;
+}
+
+.name-input::placeholder {
+	color: var(--text-dim);
+}
+
+.name-input:focus {
+	border-color: var(--accent);
+	box-shadow: 0 0 0 2px rgba(0, 255, 136, 0.1);
+}
+
+.name-input.error {
+	border-color: var(--danger);
+	box-shadow: 0 0 0 2px rgba(255, 59, 59, 0.1);
+	animation: shake 0.3s ease;
+}
