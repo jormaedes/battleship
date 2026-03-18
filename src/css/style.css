@@ -481,3 +481,14 @@ rotate-btn:not(:disabled):hover {
 	padding: 0.5rem 1rem;
 	text-transform: uppercase;
 }
+
+.restart-btn {
+	position: fixed;
+	bottom: 2rem;
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10;
+	animation: fadeIn 0.4s 0.3s both;
+	padding: 0.85rem 2.5rem;
+	font-size: 1rem;
+}
