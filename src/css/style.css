@@ -344,3 +344,21 @@ rotate-btn:not(:disabled):hover {
 	transition: background 0.12s;
 	position: relative;
 }
+
+.placement-board .cell.ship {
+	background: var(--ship);
+}
+
+.placement-board .cell.preview-valid {
+	background: rgba(0, 255, 136, 0.25);
+	cursor: pointer;
+}
+
+.placement-board .cell.preview-invalid {
+	background: rgba(255, 59, 59, 0.25);
+	cursor: not-allowed;
+}
+
+.placement-board .cell:not(.ship):not(.preview-invalid):hover {
+	background: var(--surface2);
+}
