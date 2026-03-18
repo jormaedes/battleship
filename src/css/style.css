@@ -152,3 +152,33 @@ body {
 	box-shadow: 0 0 0 2px rgba(255, 59, 59, 0.1);
 	animation: shake 0.3s ease;
 }
+
+.btn {
+	font-family: var(--font-mono);
+	font-size: 0.85rem;
+	letter-spacing: 0.2em;
+	padding: 0.75rem 1.5rem;
+	border: none;
+	cursor: pointer;
+	transition: all 0.15s ease;
+	text-transform: uppercase;
+	position: relative;
+	overflow: hidden;
+}
+
+.btn::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	background: rgba(255, 255, 255, 0.08);
+	opacity: 0;
+	transition: opacity 0.15s;
+}
+
+.btn:hover::after {
+	opacity: 1;
+}
+
+.btn:active {
+	transform: scale(0.97);
+}
