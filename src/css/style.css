@@ -107,3 +107,21 @@ body {
 	padding: 2rem 2.5rem;
 	position: relative;
 }
+
+.setup-card::before {
+	content: '';
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.input-label {
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0.2em;
+	color: var(--text-dim);
+	text-transform: uppercase;
+}
