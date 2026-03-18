@@ -85,7 +85,211 @@ export class DOMController {
 		this.app.appendChild(screen);
 		setTimeout(() => input.focus(), 50);
 	}
-	renderPlacementScreen() { }
+
+	// ─── SCREEN 2: PLACEMENT ───────────────────────────────────────────
+
+	renderPlacementScreen() {
+		this.clearApp();
+
+		this.shipsToPlace = SHIPS.map(s => ({ ...s, placed: false, ship: null, orientation: 'H' }));
+		this.currentShipIndex = 0;
+		this.orientation = 'horizontal';
+		this.tempGrid = Array.from({ length: 10 }, () => Array(10).fill(null));
+
+		const screen = this._el('div', 'screen placement-screen');
+
+		const title = this._el('h2', 'screen-title');
+		title.textContent = 'PLACE YOUR FLEET';
+
+		const hint = this._el('p', 'placement-hint');
+		hint.textContent = `Commander ${this.playerName} — deploy your ships`;
+
+		const content = this._el('div', 'placement-content');
+
+		this.shipListEl = this._el('div', 'ship-list');
+		this._renderShipList();
+
+		const gridWrapper = this._el('div', 'grid-wrapper');
+		const gridLabel = this._el('p', 'grid-label');
+		gridLabel.textContent = 'YOUR WATERS';
+		this.placementGrid = this._el('div', 'board placement-board');
+		this._renderPlacementGrid();
+		gridWrapper.append(gridLabel, this.placementGrid);
+
+		content.append(this.shipListEl, gridWrapper);
+
+		const actions = this._el('div', 'placement-actions');
+		const randomBtn = this._el('button', 'btn btn-secondary');
+		randomBtn.textContent = 'RANDOM';
+		randomBtn.addEventListener('click', () => this._randomPlacement());
+
+		this.startBtn = this._el('button', 'btn btn-primary');
+		this.startBtn.textContent = 'START BATTLE';
+		this.startBtn.disabled = true;
+		this.startBtn.addEventListener('click', () => this._startGame());
+
+		actions.append(randomBtn, this.startBtn);
+		screen.append(title, hint, content, actions);
+		this.app.appendChild(screen);
+	}
+
+	_renderShipList() {
+		this.shipListEl.innerHTML = '';
+		this.shipsToPlace.forEach((shipData, i) => {
+			const isActive = i === this.currentShipIndex && !shipData.placed;
+			const item = this._el('div', `ship-item${isActive ? ' active' : ''}${shipData.placed ? ' placed' : ''}`);
+
+			const orient = this._el('span', 'ship-orient');
+			orient.textContent = isActive ? this.orientation[0].toUpperCase() : shipData.orientation;
+
+			const name = this._el('span', 'ship-name');
+			name.textContent = shipData.name;
+
+			const len = this._el('span', 'ship-length');
+			len.textContent = shipData.length;
+
+			const rotateBtn = this._el('button', 'rotate-btn');
+			rotateBtn.textContent = '↻';
+			rotateBtn.disabled = !isActive;
+
+			if (isActive) {
+				rotateBtn.addEventListener('click', () => {
+					this.orientation = this.orientation === 'horizontal' ? 'vertical' : 'horizontal';
+					this._renderShipList();
+				});
+			}
+
+			item.append(orient, name, len, rotateBtn);
+			this.shipListEl.appendChild(item);
+		});
+	}
+
+	_renderPlacementGrid() {
+		this.placementGrid.innerHTML = '';
+		for (let r = 0; r < 10; r++) {
+			for (let c = 0; c < 10; c++) {
+				const cell = this._el('div', 'cell');
+				if (this.tempGrid[r][c] !== null) cell.classList.add('ship');
+
+				cell.addEventListener('mouseenter', () => this._showPreview(r, c));
+				cell.addEventListener('mouseleave', () => this._clearPreview());
+				cell.addEventListener('click', () => this._placeShipAt(r, c));
+
+				this.placementGrid.appendChild(cell);
+			}
+		}
+	}
+
+	_getShipCells(row, col, length, orientation) {
+		const cells = [];
+		for (let i = 0; i < length; i++) {
+			if (orientation === 'horizontal') cells.push([row, col + i]);
+			else cells.push([row + i, col]);
+		}
+		return cells;
+	}
+
+	_isValidPlacement(cells) {
+		return cells.every(([r, c]) =>
+			r >= 0 && r < 10 && c >= 0 && c < 10 && this.tempGrid[r][c] === null
+		);
+	}
+
+	_showPreview(row, col) {
+		if (this.currentShipIndex >= this.shipsToPlace.length) return;
+		const shipData = this.shipsToPlace[this.currentShipIndex];
+		if (shipData.placed) return;
+		this._clearPreview();
+		const cells = this._getShipCells(row, col, shipData.length, this.orientation);
+		const valid = this._isValidPlacement(cells);
+		cells.forEach(([r, c]) => {
+			if (r < 0 || r >= 10 || c < 0 || c >= 10) return;
+			const cell = this.placementGrid.children[r * 10 + c];
+			if (cell) cell.classList.add(valid ? 'preview-valid' : 'preview-invalid');
+		});
+	}
+
+	_clearPreview() {
+		[...this.placementGrid.children].forEach(cell => {
+			cell.classList.remove('preview-valid', 'preview-invalid');
+		});
+	}
+
+	_placeShipAt(row, col) {
+		if (this.currentShipIndex >= this.shipsToPlace.length) return;
+		const shipData = this.shipsToPlace[this.currentShipIndex];
+		if (shipData.placed) return;
+
+		const cells = this._getShipCells(row, col, shipData.length, this.orientation);
+		if (!this._isValidPlacement(cells)) return;
+
+		const ship = new Ship(shipData.length);
+		cells.forEach(([r, c]) => { this.tempGrid[r][c] = ship; });
+
+		this.game.playerBoard.board.placeShip(ship, [row, col], this.orientation);
+
+		this.shipsToPlace[this.currentShipIndex].placed = true;
+		this.shipsToPlace[this.currentShipIndex].ship = ship;
+		this.shipsToPlace[this.currentShipIndex].orientation = this.orientation[0].toUpperCase();
+
+		this.currentShipIndex++;
+		this.orientation = 'horizontal';
+		this._renderShipList();
+		this._renderPlacementGrid();
+
+		if (this.currentShipIndex >= this.shipsToPlace.length) {
+			this.startBtn.disabled = false;
+		}
+	}
+
+	_randomPlacement() {
+		this.game.playerBoard.board._grid = Array.from({ length: 10 }, () => Array(10).fill(null));
+		this.tempGrid = Array.from({ length: 10 }, () => Array(10).fill(null));
+		this.currentShipIndex = 0;
+		this.orientation = 'horizontal';
+		this.shipsToPlace = SHIPS.map(s => ({ ...s, placed: false, ship: null, orientation: 'H' }));
+
+		SHIPS.forEach((shipData, i) => {
+			const ship = new Ship(shipData.length);
+			let placed = false;
+			while (!placed) {
+				const orient = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+				const row = Math.floor(Math.random() * 10);
+				const col = Math.floor(Math.random() * 10);
+				const cells = this._getShipCells(row, col, shipData.length, orient);
+				if (this._isValidPlacement(cells)) {
+					cells.forEach(([r, c]) => { this.tempGrid[r][c] = ship; });
+					this.game.playerBoard.board.placeShip(ship, [row, col], orient);
+					this.shipsToPlace[i].placed = true;
+					this.shipsToPlace[i].ship = ship;
+					this.shipsToPlace[i].orientation = orient[0].toUpperCase();
+					placed = true;
+				}
+			}
+		});
+
+		this.currentShipIndex = SHIPS.length;
+		this._renderShipList();
+		this._renderPlacementGrid();
+		this.startBtn.disabled = false;
+	}
+
+	_startGame() {
+		// Place computer ships randomly
+		SHIPS.forEach(shipData => {
+			const ship = new Ship(shipData.length);
+			let placed = false;
+			while (!placed) {
+				const orient = Math.random() < 0.5 ? 'horizontal' : 'vertical';
+				const row = Math.floor(Math.random() * 10);
+				const col = Math.floor(Math.random() * 10);
+				const result = this.game.computerBoard.board.placeShip(ship, [row, col], orient);
+				if (result !== false) placed = true;
+			}
+		});
+		this.renderGameScreen();
+	}
+
 	renderGameScreen() { }
 
 	// helpers
