@@ -34,6 +34,12 @@ export class DOMController {
 		this.renderSetupScreen();
 	}
 
+	_el(tag, className = '') {
+		const el = document.createElement(tag);
+		if (className) el.className = className;
+		return el;
+	}
+
 	renderSetupScreen() { }
 	renderPlacementScreen() { }
 	renderGameScreen() { }
