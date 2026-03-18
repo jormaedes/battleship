@@ -26,6 +26,10 @@ export class DOMController {
 		this.computerBoardEl = null;
 	}
 
+	clearApp() {
+		this.app.innerHTML = '';
+	}
+
 	init() {
 		this.renderSetupScreen();
 	}
