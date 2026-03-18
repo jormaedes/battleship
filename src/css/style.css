@@ -410,3 +410,74 @@ rotate-btn:not(:disabled):hover {
 	outline-offset: -1px;
 	z-index: 1;
 }
+
+.game-screen {
+	padding: 1.5rem 2rem;
+	justify-content: space-between;
+	gap: 1.5rem;
+}
+
+.game-header {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	flex-wrap: wrap;
+	gap: 1rem;
+}
+
+.player-info {
+	display: flex;
+	flex-direction: column;
+}
+
+.player-label {
+	font-family: var(--font-mono);
+	font-size: 1rem;
+	letter-spacing: 0.2em;
+	color: var(--accent);
+}
+
+.message {
+	font-family: var(--font-mono);
+	font-size: 0.85rem;
+	letter-spacing: 0.1em;
+	color: var(--text);
+	background: var(--surface);
+	border: 1px solid var(--border);
+	padding: 0.6rem 1.2rem;
+	text-align: center;
+	flex: 1;
+	max-width: 500px;
+}
+
+.boards {
+	display: flex;
+	gap: 3rem;
+	flex-wrap: wrap;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+.board-wrap {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+.game-footer {
+	width: 100%;
+	display: flex;
+	justify-content: flex-end;
+}
+
+.computer-info {
+	font-family: var(--font-mono);
+	font-size: 0.75rem;
+	letter-spacing: 0.25em;
+	color: var(--text-dim);
+	border: 1px solid var(--border);
+	padding: 0.5rem 1rem;
+	text-transform: uppercase;
+}
