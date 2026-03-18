@@ -40,7 +40,51 @@ export class DOMController {
 		return el;
 	}
 
-	renderSetupScreen() { }
+	// ─── SCREEN 1: SETUP ─────────────────────────
+	renderSetupScreen() {
+		this.clearApp();
+
+		const screen = this._el('div', 'screen setup-screen');
+
+		const title = this._el('h1', 'game-title');
+		title.textContent = 'BATTLESHIP';
+
+		const subtitle = this._el('p', 'subtitle');
+		subtitle.textContent = 'Naval Combat Simulator';
+
+		const card = this._el('div', 'setup-card');
+
+		const label = this._el('label', 'input-label');
+		label.textContent = 'Commander Name';
+
+		const input = this._el('input', 'name-input');
+		input.type = 'text';
+		input.placeholder = 'Enter your name...';
+		input.maxLength = 20;
+
+		const btn = this._el('button', 'btn btn-primary');
+		btn.textContent = 'CONTINUE';
+
+		btn.addEventListener('click', () => {
+			const name = input.value.trim();
+			if (!name) {
+				input.classList.add('error');
+				return;
+			}
+			input.classList.remove('error');
+			this.playerName = name;
+			this.renderPlacementScreen();
+		});
+
+		input.addEventListener('keydown', (e) => {
+			if (e.key === 'Enter') btn.click();
+		});
+
+		card.append(label, input, btn);
+		screen.append(title, subtitle, card);
+		this.app.appendChild(screen);
+		setTimeout(() => input.focus(), 50);
+	}
 	renderPlacementScreen() { }
 	renderGameScreen() { }
 
