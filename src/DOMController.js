@@ -290,10 +290,116 @@ export class DOMController {
 		this.renderGameScreen();
 	}
 
-	renderGameScreen() { }
+	// ─── SCREEN 3: GAME ────────────────────────────────────────────────
 
-	// helpers
-	renderBoard(gameboard, container, isEnemy = false) { }
-	updateMessage(text) { }
-	clearApp() { this.app.innerHTML = ''; }
+	renderGameScreen() {
+		this.clearApp();
+
+		const screen = this._el('div', 'screen game-screen');
+
+		const header = this._el('div', 'game-header');
+		const playerInfo = this._el('div', 'player-info');
+		const playerLabel = this._el('span', 'player-label');
+		playerLabel.textContent = this.playerName.toUpperCase();
+		playerInfo.appendChild(playerLabel);
+
+		this.messageEl = this._el('div', 'message');
+		this.messageEl.textContent = 'YOUR TURN — Choose a target';
+
+		header.append(playerInfo, this.messageEl);
+
+		const boards = this._el('div', 'boards');
+
+		const playerBoardWrap = this._el('div', 'board-wrap');
+		const playerBoardLabel = this._el('p', 'board-label');
+		playerBoardLabel.textContent = 'YOUR FLEET';
+		this.playerBoardEl = this._el('div', 'board');
+		playerBoardWrap.append(playerBoardLabel, this.playerBoardEl);
+
+		const computerBoardWrap = this._el('div', 'board-wrap');
+		const computerBoardLabel = this._el('p', 'board-label');
+		computerBoardLabel.textContent = 'ENEMY WATERS';
+		this.computerBoardEl = this._el('div', 'board');
+		computerBoardWrap.append(computerBoardLabel, this.computerBoardEl);
+
+		boards.append(playerBoardWrap, computerBoardWrap);
+
+		const footer = this._el('div', 'game-footer');
+		const compInfo = this._el('div', 'computer-info');
+		compInfo.textContent = 'COMPUTER';
+		footer.appendChild(compInfo);
+
+		screen.append(header, boards, footer);
+		this.app.appendChild(screen);
+
+		this._renderGameBoards();
+	}
+
+	_renderGameBoards() {
+		this._renderBoard(this.game.playerBoard.board, this.playerBoardEl, false);
+		this._renderBoard(this.game.computerBoard.board, this.computerBoardEl, true);
+	}
+
+	_renderBoard(gameboard, container, isEnemy) {
+		container.innerHTML = '';
+		for (let r = 0; r < 10; r++) {
+			for (let c = 0; c < 10; c++) {
+				const cell = this._el('div', 'cell');
+				const val = gameboard.grid[r][c];
+
+				if (val === 'hit') cell.classList.add('hit');
+				else if (val === 'miss') cell.classList.add('miss');
+				else if (val !== null && !isEnemy) cell.classList.add('ship');
+
+				if (isEnemy && val !== 'hit' && val !== 'miss' && !this.game.isGameOver()) {
+					cell.classList.add('targetable');
+					cell.addEventListener('click', () => this._handlePlayerAttack(r, c));
+				}
+
+				container.appendChild(cell);
+			}
+		}
+	}
+
+	_handlePlayerAttack(row, col) {
+		if (this.game.isGameOver()) return;
+
+		const cell = this.game.computerBoard.board.grid[row][col];
+		if (cell === 'hit' || cell === 'miss') return;
+
+		this.game.handleAttack([row, col]);
+		this._renderGameBoards();
+
+		if (this.game.isGameOver()) {
+			this._showGameOver();
+			return;
+		}
+
+		this.updateMessage("COMPUTER IS THINKING...");
+		setTimeout(() => {
+			this.updateMessage('YOUR TURN — Choose a target');
+		}, 600);
+	}
+
+	_showGameOver() {
+		const isHuman = this.game.winner === 'human';
+		this.updateMessage(
+			isHuman
+				? `VICTORY, ${this.playerName.toUpperCase()}! — All enemy ships destroyed`
+				: 'DEFEAT — Your fleet has been eliminated'
+		);
+
+		const restartBtn = this._el('button', 'btn btn-primary restart-btn');
+		restartBtn.textContent = 'PLAY AGAIN';
+		restartBtn.addEventListener('click', () => {
+			this.game = new GameController();
+			this.renderSetupScreen();
+		});
+
+		this.app.appendChild(restartBtn);
+	}
+
+	updateMessage(text) {
+		if (this.messageEl) this.messageEl.textContent = text;
+	}
 }
