@@ -83,3 +83,11 @@ body {
 	color: var(--accent);
 	margin-bottom: 0.4rem;
 }
+
+.placement-hint {
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+	color: var(--text-dim);
+	letter-spacing: 0.15em;
+	margin-bottom: 2rem;
+}
