@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;900&display=swap');
 
+/* ─── VARIABLES ─────────────────────────────────────────────────── */
 :root {
 	--bg: #050d1a;
 	--surface: #0a1628;
@@ -19,6 +20,7 @@
 	--font-ui: 'Exo 2', sans-serif;
 }
 
+/* ─── RESET & BASE ───────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -36,6 +38,17 @@ body {
 	overflow-x: hidden;
 }
 
+body::before {
+	content: '';
+	position: fixed;
+	inset: 0;
+	background:
+		radial-gradient(ellipse 80% 60% at 20% 0%, rgba(0, 255, 136, 0.04) 0%, transparent 60%),
+		radial-gradient(ellipse 60% 80% at 80% 100%, rgba(0, 100, 255, 0.06) 0%, transparent 60%);
+	pointer-events: none;
+	z-index: 0;
+}
+
 #app {
 	position: relative;
 	z-index: 1;
@@ -45,6 +58,7 @@ body {
 	justify-content: center;
 }
 
+/* ─── SCREENS ────────────────────────────────────────────────────── */
 .screen {
 	width: 100%;
 	min-height: 100vh;
@@ -53,8 +67,22 @@ body {
 	align-items: center;
 	justify-content: center;
 	padding: 2rem;
+	animation: fadeIn 0.4s ease;
 }
 
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+/* ─── TYPOGRAPHY ─────────────────────────────────────────────────── */
 .game-title {
 	font-family: var(--font-mono);
 	font-size: clamp(2.5rem, 8vw, 5rem);
@@ -92,6 +120,7 @@ body {
 	margin-bottom: 2rem;
 }
 
+/* ─── SETUP SCREEN ───────────────────────────────────────────────── */
 .setup-screen {
 	gap: 0;
 }
@@ -153,6 +182,23 @@ body {
 	animation: shake 0.3s ease;
 }
 
+@keyframes shake {
+
+	0%,
+	100% {
+		transform: translateX(0);
+	}
+
+	25% {
+		transform: translateX(-6px);
+	}
+
+	75% {
+		transform: translateX(6px);
+	}
+}
+
+/* ─── BUTTONS ────────────────────────────────────────────────────── */
 .btn {
 	font-family: var(--font-mono);
 	font-size: 0.85rem;
@@ -183,7 +229,7 @@ body {
 	transform: scale(0.97);
 }
 
-btn-primary {
+.btn-primary {
 	background: var(--accent);
 	color: var(--bg);
 	font-weight: 700;
@@ -212,6 +258,7 @@ btn-primary {
 	color: var(--accent);
 }
 
+/* ─── PLACEMENT SCREEN ───────────────────────────────────────────── */
 .placement-screen {
 	gap: 0;
 	padding-top: 3rem;
@@ -295,7 +342,7 @@ btn-primary {
 	padding: 0;
 }
 
-rotate-btn:not(:disabled):hover {
+.rotate-btn:not(:disabled):hover {
 	border-color: var(--accent);
 	color: var(--accent);
 }
@@ -328,6 +375,7 @@ rotate-btn:not(:disabled):hover {
 	margin-top: 0.5rem;
 }
 
+/* ─── BOARD ──────────────────────────────────────────────────────── */
 .board {
 	display: grid;
 	grid-template-columns: repeat(10, var(--cell-size));
@@ -345,6 +393,7 @@ rotate-btn:not(:disabled):hover {
 	position: relative;
 }
 
+/* Placement board cells */
 .placement-board .cell.ship {
 	background: var(--ship);
 }
@@ -363,6 +412,7 @@ rotate-btn:not(:disabled):hover {
 	background: var(--surface2);
 }
 
+/* Game board cells */
 .cell.ship {
 	background: var(--ship);
 }
@@ -411,6 +461,7 @@ rotate-btn:not(:disabled):hover {
 	z-index: 1;
 }
 
+/* ─── GAME SCREEN ────────────────────────────────────────────────── */
 .game-screen {
 	padding: 1.5rem 2rem;
 	justify-content: space-between;
@@ -482,6 +533,7 @@ rotate-btn:not(:disabled):hover {
 	text-transform: uppercase;
 }
 
+/* ─── RESTART BUTTON ─────────────────────────────────────────────── */
 .restart-btn {
 	position: fixed;
 	bottom: 2rem;
@@ -491,4 +543,34 @@ rotate-btn:not(:disabled):hover {
 	animation: fadeIn 0.4s 0.3s both;
 	padding: 0.85rem 2.5rem;
 	font-size: 1rem;
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────────────── */
+@media (max-width: 700px) {
+	:root {
+		--cell-size: 30px;
+	}
+
+	.boards {
+		gap: 2rem;
+	}
+
+	.placement-content {
+		gap: 1.5rem;
+	}
+
+	.game-header {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.message {
+		max-width: 100%;
+	}
+}
+
+@media (max-width: 400px) {
+	:root {
+		--cell-size: 26px;
+	}
 }
