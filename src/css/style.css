@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Exo+2:wght@300;400;600;700;900&display=swap');
+
+/* ─── VARIABLES ─────────────────────────────────────────────────── */
+:root {
+  --bg:        #050d1a;
+  --surface:   #0a1628;
+  --surface2:  #0f2040;
+  --border:    #1a3a5c;
+  --accent:    #00ff88;
+  --accent-dim:#00cc6a;
+  --danger:    #ff3b3b;
+  --warning:   #ffaa00;
+  --text:      #c8ddf0;
+  --text-dim:  #5a7a99;
+  --ship:      #1e4a7a;
+  --hit:       #ff3b3b;
+  --miss:      #1a3a5c;
+  --cell-size: 40px;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-ui:   'Exo 2', sans-serif;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-ui);
+  overflow-x: hidden;
+}
+
